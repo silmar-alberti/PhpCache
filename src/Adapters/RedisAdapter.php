@@ -44,7 +44,7 @@ class RedisAdapter implements ConnectionAdapterInterface
         return true;
     }
 
-    public function get(string $key): string
+    public function get(string $key)
     {
         return $this->redis->get($key);
     }
