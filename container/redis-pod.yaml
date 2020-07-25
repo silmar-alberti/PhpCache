@@ -1,0 +1,55 @@
+# Generation of Kubernetes YAML is still under development!
+#
+# Save the output of this file and use kubectl create -f to import
+# it into Kubernetes.
+#
+# Created with podman-2.0.1
+apiVersion: v1
+kind: Pod
+metadata:
+  creationTimestamp: "2020-07-25T18:09:16Z"
+  labels:
+    app: redis
+  name: redis
+spec:
+  containers:
+  - command:
+    - redis-server
+    env:
+    - name: PATH
+      value: /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+    - name: TERM
+      value: xterm
+    - name: container
+      value: podman
+    - name: REDIS_VERSION
+      value: 6.0.6
+    - name: REDIS_DOWNLOAD_URL
+      value: http://download.redis.io/releases/redis-6.0.6.tar.gz
+    - name: REDIS_DOWNLOAD_SHA
+      value: 12ad49b163af5ef39466e8d2f7d212a58172116e5b441eebecb4e6ca22363d94
+    - name: GOSU_VERSION
+      value: "1.12"
+    - name: HOSTNAME
+    image: docker.io/library/redis:latest
+    name: redis
+    ports:
+    - containerPort: 6379
+      hostPort: 6379
+      protocol: TCP
+    resources: {}
+    securityContext:
+      allowPrivilegeEscalation: true
+      capabilities: {}
+      privileged: false
+      readOnlyRootFilesystem: false
+      seLinuxOptions: {}
+    workingDir: /data
+status: {}
+---
+metadata:
+  creationTimestamp: null
+spec: {}
+status:
+  loadBalancer: {}
+

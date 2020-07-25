@@ -2,7 +2,9 @@
 
 namespace PhpCache\Libraries;
 
-class HashKeyLib {
+use PhpCache\Interfaces\HashKeyInterface;
+
+class HashKeyLib implements HashKeyInterface{
     /**
      * @param string $baseContent --- base content to generate hash
      * @param string $prefix --- prefix to identificate key "namespace"
@@ -10,7 +12,7 @@ class HashKeyLib {
      * 
      * @return string hashKey
      */
-    public static function createHashKey($baseContent, $prefix = '')
+    public function getKey($baseContent, $prefix = ''): string
     {
         $key = sha1($baseContent);
         if ($prefix) {

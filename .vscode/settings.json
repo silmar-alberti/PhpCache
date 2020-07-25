@@ -71,6 +71,8 @@
         "Zend OPcache",
         "zip",
         "zlib",
-        "redis"
-    ]
+        "redis",
+        "igbinary"
+    ],
+    "intelephense.environment.phpVersion": "7.2.30"
 }

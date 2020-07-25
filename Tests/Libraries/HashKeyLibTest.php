@@ -9,9 +9,16 @@ class HashKeyLibTest extends TestCase
 {
     const KEY_PATTERN = '/^[a-fA-F0-9]+$/';
     const KEY_WITH_PREFIX_PATTERN = '/^\w+_[a-fA-F0-9]+$/';
+    
+    private $hashKeyLib;
+    public function setUp(): void
+    {
+        $this->hashKeyLib = new HashKeyLib;
+    }
+
     public function testCreateHash()
     {
-        $hash = HashKeyLib::createHashKey("test");
+        $hash = $this->hashKeyLib->getKey("test");
         $this->assertIsString($hash);
         $this->assertTrue(preg_match(self::KEY_PATTERN, $hash) === 1, 'hash not match with default pattern');
     }
@@ -19,7 +26,7 @@ class HashKeyLibTest extends TestCase
     public function testCreateHashWithPrefix()
     {
         $namespace = 'NamespaceTest';
-        $hash = HashKeyLib::createHashKey("test", $namespace);
+        $hash = $this->hashKeyLib->getKey("test", $namespace);
         $this->assertIsString($hash);
         $this->assertEquals(0, strpos($hash, $namespace), 'hash not match with default pattern when prefix defined');
         $this->assertTrue(preg_match(self::KEY_WITH_PREFIX_PATTERN, $hash) === 1, 'hash not match with default pattern when prefix defined');
@@ -28,8 +35,8 @@ class HashKeyLibTest extends TestCase
     public function testCompareHash()
     {
         $hashBaseContent = 'test';
-        $hashA = HashKeyLib::createHashKey($hashBaseContent);
-        $hashB = HashKeyLib::createHashKey($hashBaseContent);
+        $hashA = $this->hashKeyLib->getKey($hashBaseContent);
+        $hashB = $this->hashKeyLib->getKey($hashBaseContent);
 
         $this->assertEquals($hashA, $hashB, 'divergent hash with same base content');
     }
