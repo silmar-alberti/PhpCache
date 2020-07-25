@@ -4,13 +4,13 @@
     "authors": [
         {
             "name": "alberti",
-            "email": "silmaralberti@yahoo.com"
+            "email": "silmaralberti@yahoo.com",
+            "homepage": "https://github.com/silmar-alberti"
         }
     ],
     "minimum-stability": "dev",
     "require": {
-        "ext-redis": "*",
-        "ext-apcu": "*"
+        "ext-redis": "*"
     },
     "autoload": {
         "psr-4": {
