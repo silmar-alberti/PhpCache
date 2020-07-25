@@ -15,10 +15,10 @@ class HashKeyLibTest extends TestCase
         $this->assertIsString($hash);
         $this->assertTrue(preg_match(self::KEY_PATTERN, $hash) === 1, 'hash not match with default pattern');
     }
-    
+
     public function testCreateHashWithPrefix()
     {
-        $namespace = 'testNamespace';
+        $namespace = 'NamespaceTest';
         $hash = HashKeyLib::createHashKey("test", $namespace);
         $this->assertIsString($hash);
         $this->assertEquals(0, strpos($hash, $namespace), 'hash not match with default pattern when prefix defined');
