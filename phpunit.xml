@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/8.5/phpunit.xsd"
+         bootstrap="vendor/autoload.php"
+         executionOrder="depends,defects"
+         beStrictAboutOutputDuringTests="true"
+         beStrictAboutTodoAnnotatedTests="true"
+         verbose="true">
+    <testsuites>
+        <testsuite name="default">
+            <directory suffix="Test.php">Tests</directory>
+        </testsuite>
+    </testsuites>
+
+    <filter>
+        <whitelist processUncoveredFilesFromWhitelist="true">
+            <directory suffix=".php">src</directory>
+        </whitelist>
+    </filter>
+    <logging>
+        <log type="coverage-html" target="./Coverage/report/coverage" lowUpperBound="35" highLowerBound="70" showUncoveredFiles="true"/>
+        <log type="coverage-clover" target="./Coverage/report/coverage.xml"/>
+        <log type="coverage-php" target="/tmp/coverage.serialized"/>
+        <log type="coverage-text" target="php://stdout" showUncoveredFiles="false"/>
+        <log type="json" target="./Coverage/report/logfile.json"/>
+        <log type="tap" target="./Coverage/report/logfile.tap"/>
+        <log type="junit" target="./Coverage/report/logfile.xml"/>
+        <log type="testdox-html" target="./Coverage/report/testdox.html"/>
+    </logging>
+</phpunit>

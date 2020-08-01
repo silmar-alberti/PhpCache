@@ -4,15 +4,15 @@ namespace PhpCache\Libraries;
 
 use PhpCache\Interfaces\SerializeInterface;
 
-class IgBinaryLib implements SerializeInterface
+class DefaultSerializerLib implements SerializeInterface
 {
     public function serialize($data): string
     {
-        return igbinary_serialize($data);
+        return serialize($data);
     }
 
     public function unSerialize(string $data)
     {
-        return igbinary_unserialize($data);
+        return unserialize($data);
     }
 }

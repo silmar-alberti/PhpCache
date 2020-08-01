@@ -1,2 +1,4 @@
 /vendor/
+/Coverage/
 /.vscode/
+.phpunit.result.cache

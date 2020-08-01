@@ -18,13 +18,20 @@ class PhpCache
     }
 
     /**
-     * @param string|array|Serializable $baseKeyContent 
+     * @param mixed $baseKeyContent
+     * @param mixed $cacheValue
+     * Caution!! $baseKeyContent is serialized to get cacheKey,  and $cacheValue is serialized to storage
+     * if your entries not serializabe, cause error on store and recovery cache entries
      */
     public function set($baseKeyContent, $cacheValue, $lifeTime = 3600, string $prefix = ''): bool
     {
         $key = $this->getCacheKey($baseKeyContent, $prefix);
 
-        $cacheObject = new CacheObjectModel($key, $cacheValue, $lifeTime);
+        $cacheObject = new CacheObjectModel(
+            $key,
+            $this->settings->serializer->serialize($cacheValue),
+            $lifeTime
+        );
         return $this->save($cacheObject);
     }
 
