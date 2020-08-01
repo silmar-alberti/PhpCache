@@ -10,7 +10,7 @@ class SerializeLib implements SerializeInterface
     {
         return serialize($data);
     }
-    
+
     public function unSerialize(string $data)
     {
         return unserialize($data);

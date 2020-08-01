@@ -1,6 +1,7 @@
 <?php
 
 namespace PhpCache\Models;
+
 class CacheObjectModel
 {
     protected $key;
@@ -32,19 +33,19 @@ class CacheObjectModel
     {
         return $this->value;
     }
-    
+
     public function setKey($key)
     {
         $this->key = $key;
         return $this;
     }
-    
+
     public function setLifeTime($lifeTime)
     {
         $this->lifeTime = $lifeTime;
         return $this;
     }
-    
+
     public function setValue($value)
     {
         $this->value = $value;

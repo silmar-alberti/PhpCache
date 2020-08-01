@@ -2,6 +2,6 @@
 
 namespace PhpCache\Models;
 
-class PhpCacheException extends \Exception {
-
+class PhpCacheException extends \Exception
+{
 }

@@ -9,7 +9,7 @@ class HashKeyLibTest extends TestCase
 {
     const KEY_PATTERN = '/^[a-fA-F0-9]+$/';
     const KEY_WITH_PREFIX_PATTERN = '/^\w+_[a-fA-F0-9]+$/';
-    
+
     private $hashKeyLib;
     public function setUp(): void
     {

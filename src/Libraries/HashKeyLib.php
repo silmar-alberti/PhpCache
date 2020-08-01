@@ -4,7 +4,8 @@ namespace PhpCache\Libraries;
 
 use PhpCache\Interfaces\HashKeyInterface;
 
-class HashKeyLib implements HashKeyInterface{
+class HashKeyLib implements HashKeyInterface
+{
     /**
      * @param string $baseContent --- base content to generate hash
      * @param string $prefix --- prefix to identificate key "namespace"

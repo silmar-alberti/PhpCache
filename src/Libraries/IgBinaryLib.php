@@ -3,6 +3,7 @@
 namespace PhpCache\Libraries;
 
 use PhpCache\Interfaces\SerializeInterface;
+use PhpCache\Models\PhpCacheException;
 
 class IgBinaryLib implements SerializeInterface
 {
@@ -10,7 +11,7 @@ class IgBinaryLib implements SerializeInterface
     {
         return igbinary_serialize($data);
     }
-    
+
     public function unSerialize(string $data)
     {
         return igbinary_unserialize($data);

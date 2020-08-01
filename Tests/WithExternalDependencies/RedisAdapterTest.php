@@ -59,7 +59,7 @@ class RedisAdapterTest extends TestCase
         $cachedValue = $this->redis->get($this->key);
         $this->assertFalse($cachedValue, 'Error on expire Cache');
     }
-    
+
     public function testUnlink()
     {
         $this->redis->open();
@@ -69,15 +69,15 @@ class RedisAdapterTest extends TestCase
         $cachedValue = $this->redis->get($this->key);
         $this->assertFalse($cachedValue, 'Error on erase Cache');
     }
-    
+
     public function testUnlinkAll()
     {
         $key1 = "{$this->key}_1";
         $this->redis->open();
         $this->redis->set($this->key, $this->value, self::TEST_LIFE_TIME);
         $this->redis->set($key1, $this->value, self::TEST_LIFE_TIME);
-        
-        $this->redis->unlinkAll(self::PREFIX.'*');
+
+        $this->redis->unlinkAll(self::PREFIX . '*');
 
         $cachedValue = $this->redis->get($this->key);
         $this->assertFalse($cachedValue, 'Error erase Cache');
