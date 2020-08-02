@@ -9,11 +9,12 @@ use PhpCache\Models\PhpCacheSettingsModel;
 use PHPUnit\Framework\TestCase;
 use Tests\TestLibs\RedisAdapterTestLib;
 
-class PhpCacheTest extends TestCase
+class PhpCacheFunctionTest extends TestCase
 {
 
     const TEST_BASE_CONTENT = 'asdf';
     const TEST_VALUE = 'valueasdf';
+    const TEST_IDENTIFIER = 'testIdent';
     private $testSettings;
 
     public function setUp(): void
@@ -32,33 +33,51 @@ class PhpCacheTest extends TestCase
         );
     }
 
-    public function testGet()
+    public function testGetFromCache()
     {
         $phpCache = new PhpCache($this->testSettings);
-        $this->assertEquals(self::TEST_VALUE, $phpCache->get(self::TEST_BASE_CONTENT));
+        $result = $phpCache->cacheFunction(
+            function () {
+            },
+            [],
+            self::TEST_IDENTIFIER
+        );
+        $this->assertEquals(self::TEST_VALUE, $result);
     }
 
-    public function testSet()
+    public function testGetCallFunction()
     {
-        $phpCache = new PhpCache($this->testSettings);
-        $this->assertTrue($phpCache->set(self::TEST_BASE_CONTENT, self::TEST_VALUE));
-    }
+        $testValue = self::TEST_VALUE . 'ds';
 
-    public function testWrongSet()
-    {
-        $redisLib = new RedisAdapterTestLib();
-        $this->testSettings->adapter = $redisLib->getMockAdapter('', false);
-
-        $phpCache = new PhpCache($this->testSettings);
-        $this->assertFalse($phpCache->set(self::TEST_BASE_CONTENT, self::TEST_VALUE));
-    }
-
-    public function testNotFound()
-    {
         $redisLib = new RedisAdapterTestLib();
         $this->testSettings->adapter = $redisLib->getMockAdapter(false);
 
         $phpCache = new PhpCache($this->testSettings);
-        $this->assertFalse($phpCache->get(self::TEST_BASE_CONTENT));
+        $result = $phpCache->cacheFunction(
+            function () use ($testValue) {
+                return $testValue;
+            },
+            [],
+            self::TEST_IDENTIFIER
+        );
+        $this->assertEquals($testValue, $result);
+    }
+
+    public function testGetCallFunctionWithArgs()
+    {
+        $testValue = self::TEST_VALUE . 'ds';
+
+        $redisLib = new RedisAdapterTestLib();
+        $this->testSettings->adapter = $redisLib->getMockAdapter(false);
+
+        $phpCache = new PhpCache($this->testSettings);
+        $result = $phpCache->cacheFunction(
+            function ($testValue) {
+                return $testValue;
+            },
+            [$testValue],
+            self::TEST_IDENTIFIER
+        );
+        $this->assertEquals($testValue, $result);
     }
 }

@@ -9,5 +9,5 @@ interface HashKeyInterface
      * @param string $prefix --- prefix to identificate key "namespace"
      * no recomendable long prefx
      */
-    public function getKey(string $baseContent, string $prefix = ''): string;
+    public function getKey(string $baseContent, string $prefix = '', $eTag = ''): string;
 }

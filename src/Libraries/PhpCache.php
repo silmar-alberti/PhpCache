@@ -23,9 +23,9 @@ class PhpCache
      * Caution!! $baseKeyContent is serialized to get cacheKey,  and $cacheValue is serialized to storage
      * if your entries not serializabe, cause error on store and recovery cache entries
      */
-    public function set($baseKeyContent, $cacheValue, $lifeTime = 3600, string $prefix = ''): bool
+    public function set($baseKeyContent, $cacheValue, $lifeTime = 3600, string $prefix = '', string $eTag = ''): bool
     {
-        $key = $this->getCacheKey($baseKeyContent, $prefix);
+        $key = $this->getCacheKey($baseKeyContent, $prefix, $eTag);
 
         $cacheObject = new CacheObjectModel(
             $key,
@@ -38,9 +38,9 @@ class PhpCache
     /**
      * @param string|array|Serializable $baseKeyContent 
      */
-    public function get($baseKeyContent, string $prefix = '')
+    public function get($baseKeyContent, string $prefix = '', string $eTag = '')
     {
-        $key = $this->getCacheKey($baseKeyContent, $prefix);
+        $key = $this->getCacheKey($baseKeyContent, $prefix, $eTag);
         $data = $this->settings->adapter->get($key);
         if ($data !== false) {
             return $this->settings->serializer->unserialize($data);
@@ -48,6 +48,35 @@ class PhpCache
         return false;
     }
 
+    /**
+     * if function and args math in cache entry return cachedData
+     * else call function and store result in cache
+     */
+    public function cacheFunction(callable $function, array $args, string $functionIdentifier, $lifeTime = 3600, string $eTag = '')
+    {
+        $key = $this->getCacheKey($args, $functionIdentifier, $eTag);
+        $data = $this->settings->adapter->get($key);
+        if ($data !== false) {
+            return $this->settings->serializer->unserialize($data);
+        }
+
+        return $this->callAndStoreResult($function, $args, $key, $lifeTime);
+    }
+
+    private function callAndStoreResult(callable $function, array $args, string $key, int $lifeTime)
+    {
+        $returnedData = $function(...$args);
+        $cacheObject = new CacheObjectModel(
+            $key,
+            $this->settings->serializer->serialize($returnedData),
+            $lifeTime
+        );
+        if ($this->save($cacheObject)) {
+            return $returnedData;
+        }
+
+        throw new PhpCacheException('Error on save cache data');
+    }
 
     private function save(CacheObjectModel $cacheObject): bool
     {
@@ -58,9 +87,9 @@ class PhpCache
         );
     }
 
-    private function getCacheKey($baseKeyContent, $prefix)
+    private function getCacheKey($baseKeyContent, $prefix, $eTag)
     {
         $stringKeyBase = $this->settings->serializer->serialize($baseKeyContent);
-        return $this->settings->hash->getKey($stringKeyBase, $prefix);
+        return $this->settings->hash->getKey($stringKeyBase, $prefix, $eTag);
     }
 }
