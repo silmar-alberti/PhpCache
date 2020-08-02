@@ -23,6 +23,34 @@ class RedisAdapterTest extends TestCase
         $this->redis = new RedisAdapter(self::REDIS_TEST_PARAMS);
     }
 
+    public function testClose()
+    {
+        $this->redis->open();
+        sleep(1);
+        $this->assertTrue($this->redis->close());
+        // delay for close connection;
+        sleep(1);
+        $this->assertTrue($this->redis->close());
+    }
+
+    public function testCantConnect()
+    {
+        $this->redis = new RedisAdapter([]);
+
+        $this->expectException(\RedisException::class);
+        $this->redis->open();
+    }
+
+    public function testCantAuth()
+    {
+        $con = self::REDIS_TEST_PARAMS;
+        $con['auth'] = 'test';
+        $this->redis = new RedisAdapter($con);
+
+        $this->expectException(\RedisException::class);
+        $this->redis->open();
+    }
+
     public function testSetCacheEntry()
     {
         $this->redis->open();

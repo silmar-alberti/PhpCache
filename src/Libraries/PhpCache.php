@@ -42,7 +42,7 @@ class PhpCache
     {
         $key = $this->getCacheKey($baseKeyContent, $prefix, $eTag);
         $data = $this->settings->adapter->get($key);
-        if ($data !== false) {
+        if ($data !== null) {
             return $this->settings->serializer->unserialize($data);
         }
         return false;
@@ -56,7 +56,7 @@ class PhpCache
     {
         $key = $this->getCacheKey($args, $functionIdentifier, $eTag);
         $data = $this->settings->adapter->get($key);
-        if ($data !== false) {
+        if ($data !== null) {
             return $this->settings->serializer->unserialize($data);
         }
 

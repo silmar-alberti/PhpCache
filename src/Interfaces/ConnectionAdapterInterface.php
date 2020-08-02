@@ -23,7 +23,7 @@ interface ConnectionAdapterInterface
 
     /**
      * get cache entrie
-     * @return string|bool content or false when not found
+     * @return string|null content or null when not found
      */
     public function get(string $key);
 

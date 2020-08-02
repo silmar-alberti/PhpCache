@@ -50,7 +50,7 @@ class PhpCacheFunctionTest extends TestCase
         $testValue = self::TEST_VALUE . 'ds';
 
         $redisLib = new RedisAdapterTestLib();
-        $this->testSettings->adapter = $redisLib->getMockAdapter(false);
+        $this->testSettings->adapter = $redisLib->getMockAdapter(null);
 
         $phpCache = new PhpCache($this->testSettings);
         $result = $phpCache->cacheFunction(
@@ -68,7 +68,7 @@ class PhpCacheFunctionTest extends TestCase
         $testValue = self::TEST_VALUE . 'ds';
 
         $redisLib = new RedisAdapterTestLib();
-        $this->testSettings->adapter = $redisLib->getMockAdapter(false);
+        $this->testSettings->adapter = $redisLib->getMockAdapter(null);
 
         $phpCache = new PhpCache($this->testSettings);
         $result = $phpCache->cacheFunction(

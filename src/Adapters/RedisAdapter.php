@@ -4,6 +4,7 @@ namespace PhpCache\Adapters;
 
 use PhpCache\Interfaces\ConnectionAdapterInterface;
 use PhpCache\Models\CacheObjectModel;
+use PhpCache\Models\PhpCacheException;
 
 class RedisAdapter implements ConnectionAdapterInterface
 {
@@ -29,17 +30,15 @@ class RedisAdapter implements ConnectionAdapterInterface
         return true;
     }
 
+    /**
+     * @throws \RedisException
+     */
     public function open(): bool
     {
-        $connect = $this->redis->connect($this->connectionData['host'], $this->connectionData['port']);
-        if ($connect === false) {
-            throw new \Exception('Can\'t open connection with host');
-        }
-        if (!empty($credentials['auth'])) {
-            $auth = $this->redis->auth($credentials['auth']);
-            if ($auth === false) {
-                throw new \Exception('Connection auth fail');
-            }
+        $this->redis->connect($this->connectionData['host'], $this->connectionData['port']);
+
+        if (!empty($this->connectionData['auth'])) {
+            $this->redis->auth($this->connectionData['auth']);
         }
 
         return true;
@@ -47,7 +46,11 @@ class RedisAdapter implements ConnectionAdapterInterface
 
     public function get(string $key)
     {
-        return $this->redis->get($key);
+        $cache = $this->redis->get($key);
+        if ($cache !== null) {
+            return $cache;
+        }
+        return null;
     }
 
     public function set(CacheObjectModel $cacheObject): bool

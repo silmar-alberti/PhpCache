@@ -35,12 +35,16 @@ class PhpCacheTest extends TestCase
     {
         $phpCache = new PhpCache($this->testSettings);
         $this->assertEquals(self::TEST_VALUE, $phpCache->get(self::TEST_BASE_CONTENT));
+        $this->assertEquals(self::TEST_VALUE, $phpCache->get(self::TEST_BASE_CONTENT, 'none'));
+        $this->assertEquals(self::TEST_VALUE, $phpCache->get(self::TEST_BASE_CONTENT, 'none', '1'));
     }
 
     public function testSet()
     {
         $phpCache = new PhpCache($this->testSettings);
         $this->assertTrue($phpCache->set(self::TEST_BASE_CONTENT, self::TEST_VALUE));
+        $this->assertTrue($phpCache->set(self::TEST_BASE_CONTENT, self::TEST_VALUE, 2, 'none'));
+        $this->assertTrue($phpCache->set(self::TEST_BASE_CONTENT, self::TEST_VALUE, 2, 'none', '1'));
     }
 
     public function testWrongSet()
@@ -55,7 +59,7 @@ class PhpCacheTest extends TestCase
     public function testNotFound()
     {
         $redisLib = new RedisAdapterTestLib();
-        $this->testSettings->adapter = $redisLib->getMockAdapter(false);
+        $this->testSettings->adapter = $redisLib->getMockAdapter(null);
 
         $phpCache = new PhpCache($this->testSettings);
         $this->assertFalse($phpCache->get(self::TEST_BASE_CONTENT));
