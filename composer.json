@@ -1,6 +1,11 @@
 {
     "name": "silmaralberti/php-cache",
     "type": "library",
+    "keywords": [
+        "cache",
+        "redis",
+        "igbinay"
+    ],
     "authors": [
         {
             "name": "alberti",
