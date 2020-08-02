@@ -56,9 +56,9 @@ class RedisAdapter implements ConnectionAdapterInterface
     public function set(CacheObjectModel $cacheObject): bool
     {
         return $this->redis->set(
-            $cacheObject->getKey(),
-            $cacheObject->getValue(),
-            $cacheObject->getLifeTime()
+            $cacheObject->key,
+            $cacheObject->value,
+            $cacheObject->lifeTime
         );
     }
 

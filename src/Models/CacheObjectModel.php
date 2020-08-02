@@ -4,9 +4,9 @@ namespace PhpCache\Models;
 
 class CacheObjectModel
 {
-    protected $key;
-    protected $lifeTime = 3600;
-    protected $value;
+    public $key;
+    public $lifeTime = 3600;
+    public $value;
 
     /**
      * @param int $lifeTime  life time in seconds 
@@ -17,38 +17,5 @@ class CacheObjectModel
         $this->key = $key;
         $this->lifeTime = $lifeTime;
         $this->value = $value;
-    }
-
-    public function getKey(): string
-    {
-        return $this->key;
-    }
-
-    public function getLifeTime(): int
-    {
-        return $this->lifeTime;
-    }
-
-    public function getValue()
-    {
-        return $this->value;
-    }
-
-    public function setKey($key)
-    {
-        $this->key = $key;
-        return $this;
-    }
-
-    public function setLifeTime($lifeTime)
-    {
-        $this->lifeTime = $lifeTime;
-        return $this;
-    }
-
-    public function setValue($value)
-    {
-        $this->value = $value;
-        return $this;
     }
 }
