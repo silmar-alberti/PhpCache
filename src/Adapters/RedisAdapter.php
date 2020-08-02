@@ -4,7 +4,6 @@ namespace PhpCache\Adapters;
 
 use PhpCache\Interfaces\ConnectionAdapterInterface;
 use PhpCache\Models\CacheObjectModel;
-use PhpCache\Models\PhpCacheException;
 
 class RedisAdapter implements ConnectionAdapterInterface
 {
