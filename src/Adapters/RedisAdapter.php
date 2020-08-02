@@ -3,6 +3,7 @@
 namespace PhpCache\Adapters;
 
 use PhpCache\Interfaces\ConnectionAdapterInterface;
+use PhpCache\Models\CacheObjectModel;
 
 class RedisAdapter implements ConnectionAdapterInterface
 {
@@ -49,9 +50,13 @@ class RedisAdapter implements ConnectionAdapterInterface
         return $this->redis->get($key);
     }
 
-    public function set(string $key, string $value, int $lifeTime): bool
+    public function set(CacheObjectModel $cacheObject): bool
     {
-        return $this->redis->set($key, $value, $lifeTime);
+        return $this->redis->set(
+            $cacheObject->getKey(),
+            $cacheObject->getValue(),
+            $cacheObject->getLifeTime()
+        );
     }
 
     public function unlink(string $key): bool

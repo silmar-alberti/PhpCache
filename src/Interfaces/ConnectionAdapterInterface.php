@@ -2,6 +2,8 @@
 
 namespace PhpCache\Interfaces;
 
+use PhpCache\Models\CacheObjectModel;
+
 interface ConnectionAdapterInterface
 {
     /**
@@ -27,9 +29,8 @@ interface ConnectionAdapterInterface
 
     /**
      * store cache item 
-     * @param int $lifeTime ttl in seconds
      */
-    public function set(string $key, string $value, int $lifeTime): bool;
+    public function set(CacheObjectModel $cacheObject): bool;
 
     /**
      * delete cache entry

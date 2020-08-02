@@ -1,6 +1,9 @@
 # PhpCache
 extensible and flexible php cache lib. 
 
+# Install to project
+`composer require silmaralberti/php-cache`
+
 # Docs
 ## Use example 
 ``` PHP

@@ -3,6 +3,7 @@
 namespace Tests\WithExternalDependencies;
 
 use PhpCache\Adapters\RedisAdapter;
+use PhpCache\Models\CacheObjectModel;
 use PHPUnit\Framework\TestCase;
 
 class RedisAdapterTest extends TestCase
@@ -25,7 +26,7 @@ class RedisAdapterTest extends TestCase
     public function testSetCacheEntry()
     {
         $this->redis->open();
-        $wasSaved = $this->redis->set($this->key, $this->value, self::TEST_LIFE_TIME);
+        $wasSaved = $this->set($this->key, $this->value, self::TEST_LIFE_TIME);
         $this->assertTrue($wasSaved, 'Error on save cache entrie');
 
         $cachedValue = $this->redis->get($this->key);
@@ -40,7 +41,7 @@ class RedisAdapterTest extends TestCase
     public function testNotOpenConnection()
     {
         $this->expectException(\RedisException::class);
-        $this->redis->set($this->key, $this->value, self::TEST_LIFE_TIME);
+        $this->set($this->key, $this->value, self::TEST_LIFE_TIME);
     }
 
     public function testGetNotFoundEntry()
@@ -53,7 +54,7 @@ class RedisAdapterTest extends TestCase
     public function testExpireTimeLife()
     {
         $this->redis->open();
-        $this->redis->set($this->key, $this->value, self::TEST_LIFE_TIME);
+        $this->set($this->key, $this->value, self::TEST_LIFE_TIME);
 
         sleep(self::TEST_LIFE_TIME + 1);
         $cachedValue = $this->redis->get($this->key);
@@ -63,7 +64,7 @@ class RedisAdapterTest extends TestCase
     public function testUnlink()
     {
         $this->redis->open();
-        $this->redis->set($this->key, $this->value, self::TEST_LIFE_TIME);
+        $this->set($this->key, $this->value, self::TEST_LIFE_TIME);
         $this->redis->unlink($this->key);
 
         $cachedValue = $this->redis->get($this->key);
@@ -74,8 +75,8 @@ class RedisAdapterTest extends TestCase
     {
         $key1 = "{$this->key}_1";
         $this->redis->open();
-        $this->redis->set($this->key, $this->value, self::TEST_LIFE_TIME);
-        $this->redis->set($key1, $this->value, self::TEST_LIFE_TIME);
+        $this->set($this->key, $this->value, self::TEST_LIFE_TIME);
+        $this->set($key1, $this->value, self::TEST_LIFE_TIME);
 
         $this->redis->unlinkAll(self::PREFIX . '*');
 
@@ -83,5 +84,15 @@ class RedisAdapterTest extends TestCase
         $this->assertFalse($cachedValue, 'Error erase Cache');
         $cachedValue = $this->redis->get($key1);
         $this->assertFalse($cachedValue, 'Error erase Cache');
+    }
+
+    private function set($key, $value, $lifeTime)
+    {
+        $cacheObject = new CacheObjectModel(
+            $key,
+            $value,
+            $lifeTime
+        );
+        return $this->redis->set($cacheObject);
     }
 }

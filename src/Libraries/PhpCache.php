@@ -32,7 +32,7 @@ class PhpCache
             $this->settings->serializer->serialize($cacheValue),
             $lifeTime
         );
-        return $this->save($cacheObject);
+        return $this->settings->adapter->set($cacheObject);
     }
 
     /**
@@ -71,20 +71,11 @@ class PhpCache
             $this->settings->serializer->serialize($returnedData),
             $lifeTime
         );
-        if ($this->save($cacheObject)) {
+        if ($this->settings->adapter->set($cacheObject)) {
             return $returnedData;
         }
 
         throw new PhpCacheException('Error on save cache data');
-    }
-
-    private function save(CacheObjectModel $cacheObject): bool
-    {
-        return $this->settings->adapter->set(
-            $cacheObject->getKey(),
-            $cacheObject->getValue(),
-            $cacheObject->getLifeTime()
-        );
     }
 
     private function getCacheKey($baseKeyContent, $prefix, $eTag)

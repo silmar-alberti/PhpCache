@@ -19,7 +19,6 @@ class PhpCacheTest extends TestCase
     public function setUp(): void
     {
         $serializer = new IgBinaryLib();
-
         $redisLib = new RedisAdapterTestLib();
         $mockAdapter = $redisLib->getMockAdapter($serializer->serialize(self::TEST_VALUE));
 
