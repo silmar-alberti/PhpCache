@@ -2,6 +2,7 @@
     "name": "silmaralberti/php-cache",
     "type": "library",
     "license": "MIT",
+    "version": "1.0.0-dev",
     "keywords": [
         "cache",
         "redis",
