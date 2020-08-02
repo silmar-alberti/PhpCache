@@ -1,6 +1,7 @@
 {
     "name": "silmaralberti/php-cache",
     "type": "library",
+    "license": "MIT",
     "keywords": [
         "cache",
         "redis",
@@ -16,6 +17,9 @@
     "minimum-stability": "dev",
     "require": {
         "ext-redis": "*"
+    },
+    "suggest": {
+        "ext-igbinary": "low memory and cache space utilization"
     },
     "autoload": {
         "psr-4": {
