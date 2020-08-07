@@ -10,13 +10,19 @@ class RedisAdapter implements ConnectionAdapterInterface
     protected $connectionData = [
         'host' => '127.0.0.1',
         'port' => 6379,
+        'timeout' => 0.2,
+        'reserved' => null,
+        'retryInterval' => 0.0,
+        'readTimeout' => 0.0,
         'auth' => []
     ];
 
     protected $redis;
+    protected $throwErrors = true;
 
-    public function __construct(array $connectionParams)
+    public function __construct(array $connectionParams, $throwErrors = true)
     {
+        $this->throwErrors = $throwErrors;
         $this->connectionData = array_merge($this->connectionData, $connectionParams);
         $this->redis = new \Redis();
     }
@@ -34,30 +40,47 @@ class RedisAdapter implements ConnectionAdapterInterface
      */
     public function open(): bool
     {
-        $this->redis->connect($this->connectionData['host'], $this->connectionData['port']);
+        return $this->callFunctionAndCatchErrors(function () {
+            $this->redis->connect(
+                $this->connectionData['host'],
+                $this->connectionData['port'],
+                $this->connectionData['timeout'],
+                $this->connectionData['retryInterval'],
+                $this->connectionData['readTimeout']
+            );
 
-        if (!empty($this->connectionData['auth'])) {
-            $this->redis->auth($this->connectionData['auth']);
-        }
-
-        return true;
+            if (!empty($this->connectionData['auth'])) {
+                $this->redis->auth($this->connectionData['auth']);
+            }
+            return true;
+        }, [], true);
     }
 
     public function get(string $key)
     {
-        $cache = $this->redis->get($key);
-        if ($cache !== null) {
-            return $cache;
-        }
-        return null;
+        return $this->callFunctionAndCatchErrors(
+            function ($key) {
+                $cache = $this->redis->get($key);
+                if ($cache !== null) {
+                    return $cache;
+                }
+            },
+            [$key]
+        );
     }
 
     public function set(CacheObjectModel $cacheObject): bool
     {
-        return $this->redis->set(
-            $cacheObject->key,
-            $cacheObject->value,
-            $cacheObject->lifeTime
+        return $this->callFunctionAndCatchErrors(
+            function ($cacheObject) {
+                return $this->redis->set(
+                    $cacheObject->key,
+                    $cacheObject->value,
+                    $cacheObject->lifeTime
+                );
+            },
+            [$cacheObject],
+            true
         );
     }
 
@@ -82,5 +105,19 @@ class RedisAdapter implements ConnectionAdapterInterface
         }
 
         return $deletedKeys === $numberOfKeys;
+    }
+
+    private function callFunctionAndCatchErrors(callable $function, $params = [], $defaultReturn = null)
+    {
+        try {
+            return call_user_func_array($function, $params);
+        } catch (\RedisException $e) {
+            if ($this->throwErrors === true) {
+                throw $e;
+            } else {
+                error_log('REDIS ADAPTER ERROR ' . $e->getMessage());
+            }
+        }
+        return $defaultReturn;
     }
 }

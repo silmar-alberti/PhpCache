@@ -31,7 +31,7 @@ class RedisAdapterTest extends TestCase
         $this->redis->open();
     }
 
-    public function testCantAuth()
+    public function testCantAuthException()
     {
         $con = self::REDIS_TEST_PARAMS;
         $con['auth'] = 'test';
@@ -39,6 +39,15 @@ class RedisAdapterTest extends TestCase
 
         $this->expectException(\RedisException::class);
         $this->redis->open();
+    }
+
+    public function testCantAuth()
+    {
+        $con = self::REDIS_TEST_PARAMS;
+        $con['auth'] = 'test';
+
+        $this->redis = new RedisAdapter($con, false);
+        $this->assertTrue($this->redis->open());
     }
 
     public function testSetCacheEntry()
@@ -57,6 +66,12 @@ class RedisAdapterTest extends TestCase
     }
 
     public function testNotOpenConnection()
+    {
+        $this->redis = new RedisAdapter(self::REDIS_TEST_PARAMS, false);
+        $this->assertTrue($this->set($this->key, $this->value, self::TEST_LIFE_TIME));
+    }
+
+    public function testNotOpenConnectionException()
     {
         $this->expectException(\RedisException::class);
         $this->set($this->key, $this->value, self::TEST_LIFE_TIME);
