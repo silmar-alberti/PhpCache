@@ -2,7 +2,7 @@
     "name": "silmaralberti/php-cache",
     "type": "library",
     "license": "MIT",
-    "version": "1.0.0-dev",
+    "version": "1.0.0",
     "keywords": [
         "cache",
         "redis",
@@ -15,9 +15,10 @@
             "homepage": "https://github.com/silmar-alberti"
         }
     ],
-    "minimum-stability": "dev",
+    "minimum-stability": "stable",
     "require": {
-        "ext-redis": "*"
+        "ext-redis": "*",
+        "php": "^7.2"
     },
     "suggest": {
         "ext-igbinary": "low memory and cache space utilization"
