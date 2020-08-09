@@ -62,7 +62,7 @@ class RedisAdapterTest extends TestCase
         $this->redis->close();
         // delay for close connection;
         sleep(1);
-        $this->assertFalse($this->redis->get($this->key));
+        $this->assertNull($this->redis->get($this->key));
     }
 
     public function testNotOpenConnection()
@@ -81,7 +81,7 @@ class RedisAdapterTest extends TestCase
     {
         $this->redis->open();
         $cachedValue = $this->redis->get($this->key);
-        $this->assertFalse($cachedValue);
+        $this->assertNull($cachedValue);
     }
 
     public function testExpireTimeLife()
@@ -91,7 +91,7 @@ class RedisAdapterTest extends TestCase
 
         sleep(self::TEST_LIFE_TIME + 1);
         $cachedValue = $this->redis->get($this->key);
-        $this->assertFalse($cachedValue, 'Error on expire Cache');
+        $this->assertNull($cachedValue, 'Error on expire Cache');
     }
 
     public function testUnlink()
@@ -101,7 +101,7 @@ class RedisAdapterTest extends TestCase
         $this->redis->unlink($this->key);
 
         $cachedValue = $this->redis->get($this->key);
-        $this->assertFalse($cachedValue, 'Error on erase Cache');
+        $this->assertNull($cachedValue, 'Error on erase Cache');
     }
 
     public function testUnlinkAll()
@@ -114,9 +114,9 @@ class RedisAdapterTest extends TestCase
         $this->redis->unlinkAll(self::PREFIX . '*');
 
         $cachedValue = $this->redis->get($this->key);
-        $this->assertFalse($cachedValue, 'Error erase Cache');
+        $this->assertNull($cachedValue, 'Error erase Cache');
         $cachedValue = $this->redis->get($key1);
-        $this->assertFalse($cachedValue, 'Error erase Cache');
+        $this->assertNull($cachedValue, 'Error erase Cache');
     }
 
     private function set($key, $value, $lifeTime)
