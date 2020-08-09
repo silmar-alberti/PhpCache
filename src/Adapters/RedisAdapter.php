@@ -61,7 +61,7 @@ class RedisAdapter implements ConnectionAdapterInterface
         return $this->callFunctionAndCatchErrors(
             function ($key) {
                 $cache = $this->redis->get($key);
-                if ($cache !== null) {
+                if ($cache !== false) {
                     return $cache;
                 }
             },
