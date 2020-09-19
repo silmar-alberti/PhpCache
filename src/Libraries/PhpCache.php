@@ -45,7 +45,7 @@ class PhpCache
         if ($data !== null) {
             return $this->settings->serializer->unserialize($data);
         }
-        return false;
+        return null;
     }
 
     /**
