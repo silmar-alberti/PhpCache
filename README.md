@@ -1,6 +1,9 @@
 # PhpCache
 extensible and flexible php cache lib. 
 
+# CAUTION
+tests runs in php7, there may be backward compatibility errors
+
 # Install to project
 `composer require silmaralberti/php-cache`
 
