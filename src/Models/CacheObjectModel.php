@@ -9,10 +9,11 @@ class CacheObjectModel
     public $value;
 
     /**
+     * @param string $key
      * @param int $lifeTime  life time in seconds 
      * default is 3600
      */
-    public function __construct(string $key, $value, int $lifeTime)
+    public function __construct($key, $value, $lifeTime)
     {
         $this->key = $key;
         $this->lifeTime = $lifeTime;

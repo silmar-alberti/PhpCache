@@ -13,7 +13,7 @@ class HashKeyLib implements HashKeyInterface
      * 
      * @return string hashKey
      */
-    public function getKey($baseContent, $prefix = '', $eTag = ''): string
+    public function getKey($baseContent, $prefix = '', $eTag = '')
     {
         $key = sha1($baseContent . $eTag);
         if ($prefix) {

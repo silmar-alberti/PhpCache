@@ -19,11 +19,15 @@ class PhpCache
 
     /**
      * @param mixed $baseKeyContent
-     * @param mixed $cacheValue
      * Caution!! $baseKeyContent is serialized to get cacheKey,  and $cacheValue is serialized to storage
      * if your entries not serializabe, cause error on store and recovery cache entries
+     * @param mixed $cacheValue
+     * @param int $lifeTime
+     * @param string $prefix
+     * @param string $eTag
+     * @return bool
      */
-    public function set($baseKeyContent, $cacheValue, $lifeTime = 3600, string $prefix = '', string $eTag = ''): bool
+    public function set($baseKeyContent, $cacheValue, $lifeTime = 3600, $prefix = '', $eTag = '')
     {
         $key = $this->getCacheKey($baseKeyContent, $prefix, $eTag);
 
@@ -37,22 +41,32 @@ class PhpCache
 
     /**
      * @param string|array|Serializable $baseKeyContent 
+     * @param string $prefix
+     * @param string $etag
+     * @return mixed|null
      */
-    public function get($baseKeyContent, string $prefix = '', string $eTag = '')
+    public function get($baseKeyContent, $prefix = '', $eTag = '')
     {
         $key = $this->getCacheKey($baseKeyContent, $prefix, $eTag);
         $data = $this->settings->adapter->get($key);
         if ($data !== null) {
             return $this->settings->serializer->unserialize($data);
         }
-        return false;
+        return null;
     }
 
     /**
      * if function and args math in cache entry return cachedData
      * else call function and store result in cache
+     
+     * @param callable $function
+     * @param array $args
+     * @param string $functionIdentfier
+     * @param int $lifeTime
+     * @param string $eTag
+     * @return bool
      */
-    public function cacheFunction(callable $function, array $args, string $functionIdentifier, $lifeTime = 3600, string $eTag = '')
+    public function cacheFunction($function, $args, $functionIdentifier, $lifeTime = 3600, $eTag = '')
     {
         $key = $this->getCacheKey($args, $functionIdentifier, $eTag);
         $data = $this->settings->adapter->get($key);
@@ -63,7 +77,7 @@ class PhpCache
         return $this->callAndStoreResult($function, $args, $key, $lifeTime);
     }
 
-    private function callAndStoreResult(callable $function, array $args, string $key, int $lifeTime)
+    private function callAndStoreResult($function, $args, $key, $lifeTime)
     {
         $returnedData = $function(...$args);
         $cacheObject = new CacheObjectModel(

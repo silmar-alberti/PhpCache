@@ -62,6 +62,6 @@ class PhpCacheTest extends TestCase
         $this->testSettings->adapter = $redisLib->getMockAdapter(null);
 
         $phpCache = new PhpCache($this->testSettings);
-        $this->assertFalse($phpCache->get(self::TEST_BASE_CONTENT));
+        $this->assertNull($phpCache->get(self::TEST_BASE_CONTENT));
     }
 }

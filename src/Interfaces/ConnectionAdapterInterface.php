@@ -13,32 +13,40 @@ interface ConnectionAdapterInterface
 
     /**
      * close Connection
+     * @return bool
      */
-    public function close(): bool;
+    public function close();
 
     /**
      * open Connection
+     * @return bool
      */
-    public function open(): bool;
+    public function open();
 
     /**
      * get cache entrie
+     * @param string $key
      * @return string|null content or null when not found
      */
-    public function get(string $key);
+    public function get($key);
 
     /**
      * store cache item 
+     * @return bool
      */
-    public function set(CacheObjectModel $cacheObject): bool;
+    public function set(CacheObjectModel $cacheObject);
 
     /**
      * delete cache entry
+     * @param string $key
+     * @return bool
      */
-    public function unlink(string $key): bool;
+    public function unlink($key);
 
     /**
      * delete cache entry math with filter
+     * @param string $keyFilter
+     * @return bool
      */
-    public function unlinkAll(string $keyFilter): bool;
+    public function unlinkAll($keyFilter);
 }

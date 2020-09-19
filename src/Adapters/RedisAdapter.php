@@ -27,7 +27,7 @@ class RedisAdapter implements ConnectionAdapterInterface
         $this->redis = new \Redis();
     }
 
-    public function close(): bool
+    public function close()
     {
         if ($this->redis->isConnected()) {
             return $this->redis->close();
@@ -38,7 +38,7 @@ class RedisAdapter implements ConnectionAdapterInterface
     /**
      * @throws \RedisException
      */
-    public function open(): bool
+    public function open()
     {
         return $this->callFunctionAndCatchErrors(function () {
             $this->redis->connect(
@@ -56,7 +56,7 @@ class RedisAdapter implements ConnectionAdapterInterface
         }, [], true);
     }
 
-    public function get(string $key)
+    public function get($key)
     {
         return $this->callFunctionAndCatchErrors(
             function ($key) {
@@ -69,7 +69,7 @@ class RedisAdapter implements ConnectionAdapterInterface
         );
     }
 
-    public function set(CacheObjectModel $cacheObject): bool
+    public function set(CacheObjectModel $cacheObject)
     {
         return $this->callFunctionAndCatchErrors(
             function ($cacheObject) {
@@ -84,7 +84,7 @@ class RedisAdapter implements ConnectionAdapterInterface
         );
     }
 
-    public function unlink(string $key): bool
+    public function unlink($key)
     {
         if (is_callable(array($this->redis, 'unlink'))) {
             return (bool) $this->redis->unlink($key);
@@ -93,7 +93,7 @@ class RedisAdapter implements ConnectionAdapterInterface
         }
     }
 
-    public function unlinkAll(string $keyFilter): bool
+    public function unlinkAll($keyFilter)
     {
         $keys = $this->redis->keys($keyFilter);
         $numberOfKeys = count($keys);
@@ -107,6 +107,10 @@ class RedisAdapter implements ConnectionAdapterInterface
         return $deletedKeys === $numberOfKeys;
     }
 
+    /**
+     * @param callable $function
+     * @param array $params
+     */
     private function callFunctionAndCatchErrors(callable $function, $params = [], $defaultReturn = null)
     {
         try {
