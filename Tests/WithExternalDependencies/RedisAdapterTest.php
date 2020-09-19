@@ -31,15 +31,6 @@ class RedisAdapterTest extends TestCase
         $this->redis->open();
     }
 
-    public function testCantAuthException()
-    {
-        $con = self::REDIS_TEST_PARAMS;
-        $con['auth'] = 'test';
-        $this->redis = new RedisAdapter($con);
-
-        $this->expectException(\RedisException::class);
-        $this->redis->open();
-    }
 
     public function testCantAuth()
     {
