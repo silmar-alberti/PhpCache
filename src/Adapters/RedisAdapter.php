@@ -58,9 +58,10 @@ class RedisAdapter implements ConnectionAdapterInterface
 
     public function get($key)
     {
+        $redis = $this->redis;
         return $this->callFunctionAndCatchErrors(
-            function ($key) {
-                $cache = $this->redis->get($key);
+            function ($key) use ($redis) {
+                $cache = $redis->get($key);
                 if ($cache !== false) {
                     return $cache;
                 }
@@ -69,11 +70,30 @@ class RedisAdapter implements ConnectionAdapterInterface
         );
     }
 
+    /**
+     * @param CacheObjectModel $cacheObject
+     * @return int
+     */
+    public function incr($cacheObject)
+    {
+        $redis = $this->redis;
+        return $this->callFunctionAndCatchErrors(function ($cacheObject) use ($redis) {
+            if (!$redis->exists($cacheObject->key)) {
+                $this->set($cacheObject);
+                return 1;
+            }
+            return $this->redis->incrBy($cacheObject->key, $cacheObject->value);
+        }, [
+            $cacheObject
+        ]);
+    }
+
     public function set(CacheObjectModel $cacheObject)
     {
+        $redis = $this->redis;
         return $this->callFunctionAndCatchErrors(
-            function ($cacheObject) {
-                return $this->redis->set(
+            function ($cacheObject) use ($redis) {
+                return $redis->set(
                     $cacheObject->key,
                     $cacheObject->value,
                     $cacheObject->lifeTime

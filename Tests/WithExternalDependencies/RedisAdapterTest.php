@@ -13,6 +13,9 @@ class RedisAdapterTest extends TestCase
     ];
     const TEST_LIFE_TIME = 1;
     const PREFIX = 'testKey';
+    /**
+     * @var RedisAdapter $redis
+     */
     private $redis;
     private $key;
     private $value;
