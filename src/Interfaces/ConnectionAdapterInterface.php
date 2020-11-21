@@ -28,6 +28,12 @@ interface ConnectionAdapterInterface
     public function get(string $key);
 
     /**
+     * increment entry on cache 
+     * @return int new value of entry
+     */
+    public function incr(CacheObjectModel $cacheObject): int;
+
+    /**
      * store cache item 
      */
     public function set(CacheObjectModel $cacheObject): bool;
