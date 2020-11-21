@@ -10,10 +10,13 @@ class RedisAdapterTest extends TestCase
 {
     const REDIS_TEST_PARAMS = [
         // 'host' => 'host.docker.internal'
-        'host' => 'dev.silmaralberti.com.br'
+        'host' => '192.168.151.14'
     ];
     const TEST_LIFE_TIME = 1;
     const PREFIX = 'testKey';
+    /**
+     * @var RedisAdapter $redis
+     */
     private $redis;
     private $key;
     private $value;
@@ -85,13 +88,24 @@ class RedisAdapterTest extends TestCase
         $cachedValue = $this->redis->get($this->key);
         $this->assertNull($cachedValue, 'Error on expire Cache');
     }
-    
+
     public function testIncrement()
     {
         $this->redis->open();
-        $firstValue = $this->redis->incr('teste');
-        $seccondValue = $this->redis->incr('teste');
+        $firstValue = $this->incr('teste', 1, self::TEST_LIFE_TIME);
+        $seccondValue = $this->incr('teste', 1, self::TEST_LIFE_TIME);
         $this->assertGreaterThan($firstValue, $seccondValue);
+    }
+
+    public function testExpiresIncrement()
+    {
+        $this->redis->open();
+        $firstValue = $this->incr('teste', 1, self::TEST_LIFE_TIME);
+        $this->assertEquals(1, $firstValue);
+
+        sleep(self::TEST_LIFE_TIME + 1);
+        $seccondValue = $this->incr('teste', 1, self::TEST_LIFE_TIME);
+        $this->assertEquals($firstValue, $seccondValue);
     }
 
     public function testUnlink()
@@ -127,5 +141,15 @@ class RedisAdapterTest extends TestCase
             $lifeTime
         );
         return $this->redis->set($cacheObject);
+    }
+
+    private function incr($key, $value, $lifeTime)
+    {
+        $cacheObject = new CacheObjectModel(
+            $key,
+            $value,
+            $lifeTime
+        );
+        return $this->redis->incr($cacheObject);
     }
 }

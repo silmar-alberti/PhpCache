@@ -50,13 +50,10 @@ class PhpCacheTest extends TestCase
     public function testIncrease()
     {
         $phpCache = new PhpCache($this->testSettings);
-        $value1 = $phpCache->increase('valorTeste');
-        $value2 = $phpCache->increase('valorTeste');
-        $value = $phpCache->increase('valorTeste');
-        $value = $phpCache->increase('valorTeste');
-        // $this->assertTrue($phpCache->increase('valorTeste'));
-        // $this->assertTrue($phpCache->set(self::TEST_BASE_CONTENT, self::TEST_VALUE, 2, 'none'));
-        // $this->assertTrue($phpCache->set(self::TEST_BASE_CONTENT, self::TEST_VALUE, 2, 'none', '1'));
+        $firstValue = $phpCache->increase('testKey');
+        $seccondValue = $phpCache->increase('testKey');
+
+        $this->assertGreaterThan($firstValue, $seccondValue);
     }
 
     public function testWrongSet()
