@@ -31,7 +31,7 @@ interface ConnectionAdapterInterface
      * increment entry on cache 
      * @return int new value of entry
      */
-    public function incr(string $key, int $incrementValue = 1): int;
+    public function incr(CacheObjectModel $cacheObject): int;
 
     /**
      * store cache item 

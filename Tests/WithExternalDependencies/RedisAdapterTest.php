@@ -9,7 +9,8 @@ use PHPUnit\Framework\TestCase;
 class RedisAdapterTest extends TestCase
 {
     const REDIS_TEST_PARAMS = [
-        'host' => 'host.docker.internal'
+        // 'host' => 'host.docker.internal'
+        'host' => 'dev.silmaralberti.com.br'
     ];
     const TEST_LIFE_TIME = 1;
     const PREFIX = 'testKey';
@@ -83,6 +84,14 @@ class RedisAdapterTest extends TestCase
         sleep(self::TEST_LIFE_TIME + 1);
         $cachedValue = $this->redis->get($this->key);
         $this->assertNull($cachedValue, 'Error on expire Cache');
+    }
+    
+    public function testIncrement()
+    {
+        $this->redis->open();
+        $firstValue = $this->redis->incr('teste');
+        $seccondValue = $this->redis->incr('teste');
+        $this->assertGreaterThan($firstValue, $seccondValue);
     }
 
     public function testUnlink()
