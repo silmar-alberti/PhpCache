@@ -79,7 +79,7 @@ class PhpCache
 
     private function callAndStoreResult($function, $args, $key, $lifeTime)
     {
-        $returnedData = $function(...$args);
+        $returnedData = call_user_func_array($function, $args);
         $cacheObject = new CacheObjectModel(
             $key,
             $this->settings->serializer->serialize($returnedData),

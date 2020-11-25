@@ -99,9 +99,9 @@ class RedisAdapter implements ConnectionAdapterInterface
         $numberOfKeys = count($keys);
         $deletedKeys =  0;
         if (is_callable(array($this->redis, 'unlink'))) {
-            $deletedKeys = $this->redis->unlink(...$keys);
+            $deletedKeys = call_user_func_array(array($this->redis, 'unlink'), $keys);
         } else {
-            $deletedKeys = $this->redis->del(...$keys);
+            $deletedKeys = call_user_func_array(array($this->redis, 'del'), $keys);
         }
 
         return $deletedKeys === $numberOfKeys;
