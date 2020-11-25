@@ -56,6 +56,24 @@ class PhpCache
     }
 
     /**
+     * @param string|array|Serializable $baseKeyContent 
+     * @param int $increaseValue
+     * @param int $lifeTime
+     * @param string $prefix
+     * @param string $etag
+     * @return int
+     */
+    public function increase($baseKeyContent,  $increaseValue = 1,  $lifeTime = 3600, $prefix = '', $eTag = '')
+    {
+        $key = $this->getCacheKey($baseKeyContent, $prefix, $eTag);
+        return $this->settings->adapter->incr(new CacheObjectModel(
+            $key,
+            $increaseValue,
+            $lifeTime
+        ));
+    }
+
+    /**
      * if function and args math in cache entry return cachedData
      * else call function and store result in cache
      

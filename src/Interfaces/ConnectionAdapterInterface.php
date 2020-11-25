@@ -29,6 +29,12 @@ interface ConnectionAdapterInterface
      * @return string|null content or null when not found
      */
     public function get($key);
+    /**
+     * increment entry on cache 
+     * @param CacheObjectModel $cacheObject
+     * @return int new value of entry
+     */
+    public function incr($cacheObject);
 
     /**
      * store cache item 

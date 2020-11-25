@@ -47,6 +47,15 @@ class PhpCacheTest extends TestCase
         $this->assertTrue($phpCache->set(self::TEST_BASE_CONTENT, self::TEST_VALUE, 2, 'none', '1'));
     }
 
+    public function testIncrease()
+    {
+        $phpCache = new PhpCache($this->testSettings);
+        $firstValue = $phpCache->increase('testKey');
+        $seccondValue = $phpCache->increase('testKey');
+
+        $this->assertGreaterThan($firstValue, $seccondValue);
+    }
+
     public function testWrongSet()
     {
         $redisLib = new RedisAdapterTestLib();

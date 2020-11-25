@@ -35,6 +35,9 @@ $valueContent = [
     'valueA' => 'contentA',
     'valueB' => 'contentB'
 ];
+$valueCount = $phpCache->increase($queryContent, 1);
+// $valueCount 1 if first call
+
 $successOnSave = $phpCache->set($queryContent, $valueContent);
 // $successOnSave true if success else false
 
@@ -55,6 +58,8 @@ $cachedValueContent = $phpCache->get($queryContent);
 - `HashKeyLib`
 
 ## PhpCache Methods
+### `increase()`
+increment and return key value
 ### `get()`
 load cache data
 ### `set()`
