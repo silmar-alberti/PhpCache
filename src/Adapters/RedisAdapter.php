@@ -71,15 +71,23 @@ class RedisAdapter implements ConnectionAdapterInterface
 
     public function incr(CacheObjectModel $cacheObject): int
     {
-        return $this->callFunctionAndCatchErrors(function ($cacheObject) {
-            if (!$this->redis->exists($cacheObject->key)) {
-                $this->set($cacheObject);
-                return 1;
-            }
-            return $this->redis->incrBy($cacheObject->key, $cacheObject->value);
-        }, [
-            $cacheObject
-        ]);
+        return $this->callFunctionAndCatchErrors(
+            function ($cacheObject) {
+                if (!$this->redis->exists($cacheObject->key)) {
+                    $this->set($cacheObject);
+                    return 1;
+                }
+                $returnNumber = $this->redis->incrBy($cacheObject->key, $cacheObject->value);
+                if ($returnNumber === false) {
+                    return 1;
+                }
+                return $returnNumber;
+            },
+            [
+                $cacheObject
+            ],
+            1
+        );
     }
 
     public function set(CacheObjectModel $cacheObject): bool
