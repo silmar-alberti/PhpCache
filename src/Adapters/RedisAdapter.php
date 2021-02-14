@@ -14,6 +14,8 @@ class RedisAdapter implements ConnectionAdapterInterface
         'reserved' => null,
         'retryInterval' => 0.0,
         'readTimeout' => 0.0,
+        'persistent' => false,
+        'persistentId' => false,
         'auth' => []
     ];
 
@@ -41,13 +43,25 @@ class RedisAdapter implements ConnectionAdapterInterface
     public function open(): bool
     {
         return $this->callFunctionAndCatchErrors(function () {
-            $this->redis->connect(
-                $this->connectionData['host'],
-                $this->connectionData['port'],
-                $this->connectionData['timeout'],
-                $this->connectionData['retryInterval'],
-                $this->connectionData['readTimeout']
-            );
+            if($this->connectionData['persistent'] === true) {
+                $this->redis->pconnect(
+                    $this->connectionData['host'],
+                    $this->connectionData['port'],
+                    $this->connectionData['timeout'],
+                    $this->connectionData['persistentId'],
+                    $this->connectionData['retryInterval'],
+                    $this->connectionData['readTimeout']
+                );
+            }else {
+                $this->redis->connect(
+                    $this->connectionData['host'],
+                    $this->connectionData['port'],
+                    $this->connectionData['timeout'],
+                    $this->connectionData['reserved'],
+                    $this->connectionData['retryInterval'],
+                    $this->connectionData['readTimeout']
+                );
+            }
 
             if (!empty($this->connectionData['auth'])) {
                 $this->redis->auth($this->connectionData['auth']);
@@ -71,15 +85,23 @@ class RedisAdapter implements ConnectionAdapterInterface
 
     public function incr(CacheObjectModel $cacheObject): int
     {
-        return $this->callFunctionAndCatchErrors(function ($cacheObject) {
-            if (!$this->redis->exists($cacheObject->key)) {
-                $this->set($cacheObject);
-                return 1;
-            }
-            return $this->redis->incrBy($cacheObject->key, $cacheObject->value);
-        }, [
-            $cacheObject
-        ]);
+        return $this->callFunctionAndCatchErrors(
+            function ($cacheObject) {
+                if (!$this->redis->exists($cacheObject->key)) {
+                    $this->set($cacheObject);
+                    return 1;
+                }
+                $returnNumber = $this->redis->incrBy($cacheObject->key, $cacheObject->value);
+                if ($returnNumber === false) {
+                    return 1;
+                }
+                return $returnNumber;
+            },
+            [
+                $cacheObject
+            ],
+            1
+        );
     }
 
     public function set(CacheObjectModel $cacheObject): bool
