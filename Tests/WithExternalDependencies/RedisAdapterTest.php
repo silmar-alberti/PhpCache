@@ -99,6 +99,8 @@ class RedisAdapterTest extends TestCase
 
     public function testExpiresIncrement()
     {
+        sleep(self::TEST_LIFE_TIME + 1);
+
         $this->redis->open();
         $firstValue = $this->incr('teste', 1, self::TEST_LIFE_TIME);
         $this->assertEquals(1, $firstValue);
