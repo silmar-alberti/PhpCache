@@ -87,14 +87,21 @@ class RedisAdapter implements ConnectionAdapterInterface
     {
         return $this->callFunctionAndCatchErrors(
             function ($cacheObject) {
-                if (!$this->redis->exists($cacheObject->key)) {
+                $returnNumber = 1;
+
+                if ($this->redis->exists($cacheObject->key)) {
+                    $ttl = $this->redis->ttl($cacheObject->key);
+                    $ttl = ($ttl > $cacheObject->lifeTime) ? $cacheObject->lifeTime : $ttl;
+
+                    if (!($returnNumber = $this->redis->incrBy($cacheObject->key, $cacheObject->value))) {
+                        $returnNumber = 1;
+                    }
+
+                    $this->redis->expire($cacheObject->key, $ttl);
+                } else {
                     $this->set($cacheObject);
-                    return 1;
                 }
-                $returnNumber = $this->redis->incrBy($cacheObject->key, $cacheObject->value);
-                if ($returnNumber === false) {
-                    return 1;
-                }
+
                 return $returnNumber;
             },
             [
