@@ -15,7 +15,8 @@ class RedisAdapter implements ConnectionAdapterInterface
         'retryInterval' => 0.0,
         'readTimeout' => 0.0,
         'persistent' => false,
-        'persistentId' => false,
+        'persistentId' => null,
+        'databaseIndex' => 1,
         'auth' => []
     ];
 
@@ -57,7 +58,7 @@ class RedisAdapter implements ConnectionAdapterInterface
                     $this->connectionData['host'],
                     $this->connectionData['port'],
                     $this->connectionData['timeout'],
-                    $this->connectionData['reserved'],
+                    $this->connectionData['persistentId'],
                     $this->connectionData['retryInterval'],
                     $this->connectionData['readTimeout']
                 );
@@ -66,6 +67,8 @@ class RedisAdapter implements ConnectionAdapterInterface
             if (!empty($this->connectionData['auth'])) {
                 $this->redis->auth($this->connectionData['auth']);
             }
+            
+            $this->redis->select($this->connectionData['databaseIndex']);
             return true;
         }, [], true);
     }

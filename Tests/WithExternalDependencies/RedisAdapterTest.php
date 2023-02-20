@@ -9,8 +9,7 @@ use PHPUnit\Framework\TestCase;
 class RedisAdapterTest extends TestCase
 {
     const REDIS_TEST_PARAMS = [
-        // 'host' => 'host.docker.internal'
-        'host' => '192.168.151.14'
+        'host' => 'host.docker.internal'
     ];
     const TEST_LIFE_TIME = 1;
     const PREFIX = 'testKey';
@@ -24,12 +23,14 @@ class RedisAdapterTest extends TestCase
     {
         $this->key = uniqid(self::PREFIX);
         $this->value = date("Y-m-d H:i:s");
-        $this->redis = new RedisAdapter(self::REDIS_TEST_PARAMS);
+        $this->redis = new RedisAdapter(self::REDIS_TEST_PARAMS, true);
     }
 
     public function testCantConnect()
     {
-        $this->redis = new RedisAdapter([]);
+        $this->redis = new RedisAdapter([
+            'host' => 'wrongHost',
+        ]);
 
         $this->expectException(\RedisException::class);
         $this->redis->open();
@@ -93,6 +94,8 @@ class RedisAdapterTest extends TestCase
     {
         $this->redis->open();
         $firstValue = $this->incr('teste', 1, self::TEST_LIFE_TIME);
+        $this->redis->close();
+        $this->redis->open();
         $seccondValue = $this->incr('teste', 1, self::TEST_LIFE_TIME);
         $this->assertGreaterThan($firstValue, $seccondValue);
     }
@@ -100,6 +103,7 @@ class RedisAdapterTest extends TestCase
     public function testExpiresIncrement()
     {
         $this->redis->open();
+        $this->redis->unlink('teste');
         $firstValue = $this->incr('teste', 1, self::TEST_LIFE_TIME);
         $this->assertEquals(1, $firstValue);
 

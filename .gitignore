@@ -2,3 +2,4 @@
 /Coverage/
 /.vscode/
 .phpunit.result.cache
+/composer.phar
