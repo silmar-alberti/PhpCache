@@ -2,7 +2,7 @@
     "name": "silmaralberti/php-cache",
     "type": "library",
     "license": "MIT",
-    "version": "1.1.1",
+    "version": "1.1.2",
     "keywords": [
         "cache",
         "redis",
@@ -18,7 +18,7 @@
     "minimum-stability": "stable",
     "require": {
         "ext-redis": "*",
-        "php": "^7.2"
+        "php": "^7.2|^8.0"
     },
     "suggest": {
         "ext-igbinary": "low memory and cache space utilization"
@@ -33,12 +33,7 @@
             "Tests\\": "Tests/"
         }
     },
-    "config": {
-        "platform": {
-            "php": "7.2.0"
-        }
-    },
     "require-dev": {
-        "phpunit/phpunit": "8.5.x"
+        "phpunit/phpunit": "^9.6"
     }
 }
